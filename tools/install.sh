@@ -150,9 +150,9 @@ install_rtklib() {
 rtkbase_repo(){
     #Get rtkbase repository
     if [[ -n "${1}" ]]; then
-      sudo -u "$(logname)" git clone --branch "${1}" --single-branch https://github.com/stefal/rtkbase.git
+      sudo -u "$(logname)" git clone --branch "${1}" --single-branch https://github.com/nedieon/rtkbase.git
     else
-      sudo -u "$(logname)" git clone https://github.com/stefal/rtkbase.git
+      sudo -u "$(logname)" git clone https://github.com/nedieon/rtkbase.git
     fi
     sudo -u "$(logname)" touch rtkbase/settings.conf
     add_rtkbase_path_to_environment
