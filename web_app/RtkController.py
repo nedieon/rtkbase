@@ -118,7 +118,8 @@ class RtkController:
         if self.launched:
             self.semaphore.acquire()
 
-            self.child.kill(signal.SIGUSR2)
+            #self.child.kill(signal.SIGUSR2) <- doesn't kill childs on Debian Bookworm
+            self.child.terminate(force=True)
 
             # wait for rtkrcv to shutdown
             try:
@@ -282,6 +283,7 @@ class RtkController:
                 sat_name_index = header.index("SAT")
                 sat_level_index = header.index("S1")
                 sat_input_source_index = header.index("R")
+                sat_time_index = header.index("TIME(GPST)")
 
                 if len(obs) > (header_index + 1):
                     # we have some info about the actual satellites:
@@ -295,14 +297,17 @@ class RtkController:
                         if len(spl) > sat_level_index:
                             name = spl[sat_name_index]
                             level = spl[sat_level_index]
+                            gps_time = spl[sat_time_index]
 
                             # R parameter corresponds to the input source number
                             if spl[sat_input_source_index] == "1":
                                 # we consider 1 to be rover,
                                 self.obs_rover[name] = level
+                                self.obs_rover["gps_time"] = gps_time
                             elif spl[sat_input_source_index] == "2":
                                 # 2 to be base
                                 self.obs_base[name] = level
+                                self.obs_base["gps_time"] = gps_time
 
                 else:
                     self.obs_base = {}

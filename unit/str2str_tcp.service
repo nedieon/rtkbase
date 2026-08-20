@@ -5,7 +5,8 @@ Description=RTKBase Tcp
 #Requires=network-online.target
 
 [Service]
-Type=forking
+Type=simple
+SyslogIdentifier=str2str_tcp
 User={user}
 ExecStart={script_path}/run_cast.sh in_serial out_tcp
 Restart=on-failure
@@ -13,6 +14,9 @@ RestartSec=30
 #Limiting log to 1 msg per minute
 LogRateLimitIntervalSec=1 minute
 LogRateLimitBurst=1
+ProtectHome=read-only
+ProtectSystem=strict
+ReadWritePaths={script_path}
 
 [Install]
 WantedBy=multi-user.target
